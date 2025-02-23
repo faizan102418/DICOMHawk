@@ -43,10 +43,18 @@ pynetdicom_logger.addHandler(logging.FileHandler(log_file_path))
 app = Flask(__name__)
 
 def get_server_status():
-    return {
-        "status": "running",
-        "last_updated": datetime.now().isoformat()
-    }
+    try:
+        return {
+            "status": "running",
+            "last_updated": datetime.now().isoformat()
+        }
+    except Exception as e:
+        exception_logger.error(f"Error getting server status: {e}")
+        return {
+            "status": "error",
+            "last_updated": None,
+            "error": str(e)
+        }
 @app.route('/')
 def landing_page():
   
